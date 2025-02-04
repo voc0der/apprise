@@ -2,7 +2,7 @@
 # BSD 2-Clause License
 #
 # Apprise - Push Notification Library.
-# Copyright (c) 2024, Chris Caron <lead2gold@gmail.com>
+# Copyright (c) 2025, Chris Caron <lead2gold@gmail.com>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -32,7 +32,7 @@ from unittest import mock
 import pytest
 import requests
 from datetime import datetime
-from json import dumps
+from json import dumps, loads
 from apprise import Apprise
 from apprise import NotifyType
 from apprise import AppriseAttachment
@@ -541,6 +541,18 @@ def test_plugin_office365_queries(mock_post, mock_get, mock_put):
         'https://login.microsoftonline.com/{}/oauth2/v2.0/token'.format(tenant)
     assert mock_post.call_args_list[1][0][0] == \
         'https://graph.microsoft.com/v1.0/users/abc-1234-object-id/sendMail'
+    payload = loads(mock_post.call_args_list[1][1]['data'])
+    assert payload == {
+        'message': {
+            'subject': 'title',
+            'body': {
+                'contentType': 'HTML',
+                'content': 'body',
+            },
+            'toRecipients': [
+                {'emailAddress': {'address': 'target@example.ca'}}]},
+        'saveToSentItems': 'true',
+    }
     mock_post.reset_mock()
 
     # Now test a case where we just couldn't get any email details from the

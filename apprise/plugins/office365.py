@@ -2,7 +2,7 @@
 # BSD 2-Clause License
 #
 # Apprise - Push Notification Library.
-# Copyright (c) 2024, Chris Caron <lead2gold@gmail.com>
+# Copyright (c) 2025, Chris Caron <lead2gold@gmail.com>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -92,7 +92,7 @@ class NotifyOffice365(NotifyBase):
     # uploaded inline with the current email going out (one http post)
     # Anything larger than this and a second PUT request is required to
     # the outlook server to post the content through reference.
-    # Currently (as of 2024.10.06) this was documented to be 3MB
+    # Currently (as of 2025.10.06) this was documented to be 3MB
     outlook_attachment_inline_max = 3145728
 
     # Use all the direct application permissions you have configured for your
@@ -366,15 +366,13 @@ class NotifyOffice365(NotifyBase):
 
         if self.from_email:
             # Apply from email if it is known
-            payload.update({
-                'message': {
-                    'from': {
-                        "emailAddress": {
-                            "address": self.from_email,
-                            "name": self.from_name or self.app_id,
-                        }
-                    },
-                }
+            payload['message'].update({
+                'from': {
+                    "emailAddress": {
+                        "address": self.from_email,
+                        "name": self.from_name or self.app_id,
+                    }
+                },
             })
 
         # Create a copy of the email list
